@@ -118,11 +118,11 @@ class Swimming(Training):
 
 
 def read_package(workout_type: str,
-                 data: list[int]) -> Dict[str, Type[Training]]:
+                 data: list[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    dict_for_training = {'SWM': Swimming,
-                         'RUN': Running,
-                         'WLK': SportsWalking}
+    dict_for_training: Dict[str, Type[Training]] = {'SWM': Swimming,
+                                                    'RUN': Running,
+                                                    'WLK': SportsWalking}
     if workout_type in dict_for_training:
         return dict_for_training[workout_type](*data)
     raise Exception(f'There is no such training as {workout_type}')
