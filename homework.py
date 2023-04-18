@@ -10,14 +10,17 @@ class InfoMessage:
     distance: float
     speed: float
     calories: float
-    message = ('Тип тренировки: {}; '
-               'Длительность: {:.3f} ч.; '
-               'Дистанция: {:.3f} км; '
-               'Ср. скорость: {:.3f} км/ч; '
-               'Потрачено ккал: {:.3f}.')
+    MESSAGE: str = ('Тип тренировки: {training_type}; '
+                    'Длительность: {duration:.3f} ч.; '
+                    'Дистанция: {distance:.3f} км; '
+                    'Ср. скорость: {speed:.3f} км/ч; '
+                    'Потрачено ккал: {calories:.3f}.')
 
     def get_message(self) -> str:
-        return self.message.format(*asdict(self).values())
+        training_type, duration, dist, speed, cal, *msg = asdict(self).values()
+        return self.MESSAGE.format(training_type=training_type,
+                                   duration=duration, distance=dist,
+                                   speed=speed, calories=cal)
 
 
 class Training:
@@ -118,13 +121,13 @@ class Swimming(Training):
 
 
 def read_package(workout_type: str,
-                 data: list[int]) -> Training:
+                 data: list[float]) -> Training:
     """Прочитать данные полученные от датчиков."""
     dict_for_training: Dict[str, Type[Training]] = {'SWM': Swimming,
                                                     'RUN': Running,
                                                     'WLK': SportsWalking}
-    if workout_type in dict_for_training:
-        return dict_for_training[workout_type](*data)
+    if workout_class := dict_for_training.get(workout_type):
+        return workout_class(*data)
     raise Exception(f'There is no such training as {workout_type}')
 
 
